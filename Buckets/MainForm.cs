@@ -15,5 +15,11 @@ namespace Buckets
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            HashMatrix.ApplyHash(64, StringHashes.Bernstein);
+            HashMatrix.DrawImage(pictureBox1);
+        }
     }
 }
