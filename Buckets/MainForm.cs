@@ -18,7 +18,8 @@ namespace Buckets
 
         private void button1_Click(object sender, EventArgs e)
         {
-            HashMatrix.ApplyHash(64, StringHashes.Bernstein);
+            HashMatrix.LoadMultiplier = 1000;
+            HashMatrix.ApplyHash(4, StringHashes.SAX);
             HashMatrix.DrawImage(pictureBox1);
         }
     }

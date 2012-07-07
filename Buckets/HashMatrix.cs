@@ -12,11 +12,16 @@ namespace Buckets
 {
     public static class HashMatrix
     {
-        private static int width = 1000;
-        private static int height = 1000;
+        private static int width = 500;
+        private static int height = 500;
         private static long[,] pixelMatrix = new long[width, height];
-        private static int loadMultiplier = 100;
         private static long highVal = 0;
+
+        public static int LoadMultiplier
+        {
+            get;
+            set;
+        }
 
         public static bool MultiThreaded
         {
@@ -27,6 +32,7 @@ namespace Buckets
         static HashMatrix()
         {
             MultiThreaded = true;
+            LoadMultiplier = 1;
         }
 
         /// <summary>
@@ -35,13 +41,13 @@ namespace Buckets
         /// <param name="function">The hash function to fill according to.</param>
         public static void ApplyHash(int stringSize, Func<string, uint, uint> function)
         {
-            pixelMatrix = new long[1000, 1000];
+            pixelMatrix = new long[width, height];
             long range = pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1);
 
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                Parallel.For(0, pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * loadMultiplier, i =>
+                Parallel.For(0, pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * LoadMultiplier, i =>
                 {
                     long position = function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
                     long row = position / pixelMatrix.GetLength(1);
@@ -51,7 +57,7 @@ namespace Buckets
             }
             else
             {
-                for (int i = 0; i < pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * loadMultiplier; i++)
+                for (int i = 0; i < pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * LoadMultiplier; i++)
                 {
                     long position = (int)function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
                     long x = position % pixelMatrix.GetLength(1);
