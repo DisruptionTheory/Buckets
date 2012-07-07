@@ -7,23 +7,20 @@ namespace System
 {
     public static class ParallelPlus
     {
-        public static void StridingFor(int from, int to, int stride, Action<int> body)
+        private static long cpuCount = Environment.ProcessorCount;
+
+        public static void StridingFor(long from, long to, Action<long> body)
         {
-            int index = from;
-            if (stride <= 0) stride = 1;
-            int blocks = (to - from) / stride;
-            Task[] tasks = new Task[blocks];
-            for (int i = 0; i < blocks; i++)
+            long stride = (to - from) / cpuCount;
+            long blocks = cpuCount;
+            IAsyncResult[] tasks = new IAsyncResult[blocks];
+            for (long i = 0; i < blocks; i++)
             {
-                int low = from + (i * stride);
-                int high = low + stride - 1;
-                tasks[i] = new Task(delegate { for (int j = low; j <= high; j++) body(j); });
-                tasks[i].Start();
+                long low = from + (i * stride);
+                long high = low + stride - 1;
+                tasks[i] = (new Action(() => {for (long j = low; j <= high; j++) body(j); })).BeginInvoke(null, null);
             }
-            for (int i = 0; i < blocks; i++)
-            {
-                tasks[i].Wait();
-            }
+            for (long i = 0; i < blocks; i++) tasks[i].AsyncWaitHandle.WaitOne();
         }
     }
 }

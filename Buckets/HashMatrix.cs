@@ -13,8 +13,8 @@ namespace Buckets
 {
     public static class HashMatrix
     {
-        private static int width = 500;
-        private static int height = 500;
+        private static int width = 600;
+        private static int height = 600;
         private static long[,] pixelMatrix = new long[width, height];
         private static long highVal = 0;
 
@@ -68,60 +68,97 @@ namespace Buckets
 
         static HashMatrix()
         {
-            MultiThreaded = true;
+            MultiThreaded = false;
             LoadMultiplier = 1;
             BlackAndWhite = false;
             CapturingMouse_3DSurface = false;
         }
 
         /// <summary>
-        /// Fill the internal pixel matrix according to the specified hash function.
+        /// Fill the internal pixel matrix according to the specified hash function. using Randomly Generated String Keys
         /// </summary>
         /// <param name="function">The hash function to fill according to.</param>
-        public static void ApplyHash(int stringSize, Func<string, uint, uint> function)
+        public static void ApplyHashRandomStringKeys(int stringSize, Func<string, uint, uint> function)
         {
             pixelMatrix = new long[width, height];
-            long range = pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1);
+            long range = width * height;
 
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                ParallelPlus.StridingFor(0, pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * LoadMultiplier, 100000, i =>
+                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
                 {
-                    long position = function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
-                    long row = position / pixelMatrix.GetLength(1);
-                    long column = position % pixelMatrix.GetLength(0);
-                    pixelMatrix[row, column] += 1;
+                    long position = function(Generator.RandomAlphaNumeric(stringSize, true), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
                 });
             }
             else
             {
-                for (int i = 0; i < pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * LoadMultiplier; i++)
+                for (int i = 0; i < range * LoadMultiplier; i++)
                 {
-                    long position = (int)function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
-                    long x = position % pixelMatrix.GetLength(1);
-                    long y = position / pixelMatrix.GetLength(0);
+                    long position = function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
                     pixelMatrix[x, y] += 1;
                 }
             }
+            FindHighVal();
+        }
 
+        /// <summary>
+        /// Fill the internal pixel matrix according to the specified hash function. using numbers 0 to load limit as strings.
+        /// </summary>
+        /// <param name="function">The hash function to fill according to.</param>
+        public static void ApplyHashIncrementalNumerics(Func<string, uint, uint> function)
+        {
+            pixelMatrix = new long[width, height];
+            long range = width * height;
+
+            //fill pixel matrix with number of times a bucket gets a value
+            if (MultiThreaded)
+            {
+                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                {
+                    long position = function(i.ToString(), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                });
+            }
+            else
+            {
+                for (int i = 0; i < range * LoadMultiplier; i++)
+                {
+                    long position = function(i.ToString(), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                }
+            }
+            FindHighVal();
+        }
+
+        private static void FindHighVal()
+        {
             //find highest value bucket to adjust color proportions accordingly.
             highVal = 0;
             if (MultiThreaded)
             {
-                ParallelPlus.StridingFor(0, pixelMatrix.GetLength(0), 100, x =>
+                ParallelPlus.StridingFor(0, width, x =>
                 {
-                    for(int y = 0; y < pixelMatrix.GetLength(1); y++)
+                    for (int y = 0; y < height; y++)
                     {
-                        if (pixelMatrix[x, y] > highVal) Interlocked.Exchange(ref highVal, pixelMatrix[x, y]); 
+                        if (pixelMatrix[x, y] > highVal) highVal = pixelMatrix[x, y];
                     }
-                });                
+                });
             }
             else
             {
-                for (int x = 0; x < pixelMatrix.GetLength(0); x++)
+                for (int x = 0; x < width; x++)
                 {
-                    for (int y = 0; y < pixelMatrix.GetLength(1); y++)
+                    for (int y = 0; y < height; y++)
                     {
                         if (pixelMatrix[x, y] > highVal) highVal = pixelMatrix[x, y];
                     }
@@ -139,9 +176,9 @@ namespace Buckets
                 double valueProportion = 255 / highVal;
                 //Create and fill a bitmap
                 Bitmap image = new Bitmap(width, height);
-                for (int x = 0; x < pixelMatrix.GetLength(0); x++)
+                for (int x = 0; x < width; x++)
                 {
-                    for (int y = 0; y < pixelMatrix.GetLength(1); y++)
+                    for (int y = 0; y < height; y++)
                     {
                         double pixelValue = pixelMatrix[x, y] * valueProportion;
                         int roundedValue = (int)Math.Floor(pixelValue);
@@ -156,9 +193,9 @@ namespace Buckets
                 double valueProportion = int.MaxValue / highVal;
                 //Create and fill a bitmap
                 Bitmap image = new Bitmap(width, height);
-                for (int x = 0; x < pixelMatrix.GetLength(0); x++)
+                for (int x = 0; x < width; x++)
                 {
-                    for (int y = 0; y < pixelMatrix.GetLength(1); y++)
+                    for (int y = 0; y < height; y++)
                     {
                         double pixelValue = pixelMatrix[x, y] * valueProportion;
                         int roundedValue = (int)Math.Floor(pixelValue);

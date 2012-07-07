@@ -148,6 +148,7 @@ namespace Plot3D
 
         public void RenderSurface(Graphics graphics, long[,] matrix, int adjustmentValue, bool newRender = false)
         {
+            //adjust according to adjustment value as long as its not simply a rotation
             if (!newRender)
             {
                 if (MultiThreaded)
@@ -155,7 +156,7 @@ namespace Plot3D
                     //find largest value and if it exceeds half the height, force all values into the half height range
                     double largestVal = double.NegativeInfinity;
                     
-                    ParallelPlus.StridingFor(0, matrix.GetLength(0), 100, x =>
+                    ParallelPlus.StridingFor(0, matrix.GetLength(0), x =>
                     {
                         for(int y = 0; y < matrix.GetLength(1); y++)
                         {
@@ -165,7 +166,7 @@ namespace Plot3D
                     if (largestVal > adjustmentValue)
                     {
                         double proportion = adjustmentValue / largestVal;
-                        ParallelPlus.StridingFor(0, matrix.GetLength(0), 50, x=>
+                        ParallelPlus.StridingFor(0, matrix.GetLength(0), x=>
                         {
                             for(int y = 0; y < matrix.GetLength(1); y++)
                             {
@@ -209,34 +210,16 @@ namespace Plot3D
             double[,] mesh = new double[(int)((endPoint.X - startPoint.X) / density + 1), (int)((endPoint.Y - startPoint.Y) / density + 1)];
             PointF[,] meshF = new PointF[mesh.GetLength(0), mesh.GetLength(1)];
 
-            if (MultiThreaded)
+            for (int x = 0; x < mesh.GetLength(0); x++)
             {
-                ParallelPlus.StridingFor(0, mesh.GetLength(0), 100, x =>
+                for (int y = 0; y < mesh.GetLength(1); y++)
                 {
-                    for(int y = 0; y < mesh.GetLength(1); y++)
-                    {
-                        double zz = matrix[x, y];
-                        mesh[x, y] = zz;
-                        meshF[x, y] = Project(x, y, zz);
+                    double zz = matrix[x, y];
+                    mesh[x, y] = zz;
+                    meshF[x, y] = Project(x, y, zz);
 
-                        if (minZ > zz) minZ = zz;
-                        if (maxZ < zz) maxZ = zz;
-                    }
-                });
-            }
-            else
-            {
-                for (int x = 0; x < mesh.GetLength(0); x++)
-                {
-                    for (int y = 0; y < mesh.GetLength(1); y++)
-                    {
-                        double zz = matrix[x, y];
-                        mesh[x, y] = zz;
-                        meshF[x, y] = Project(x, y, zz);
-
-                        if (minZ > zz) minZ = zz;
-                        if (maxZ < zz) maxZ = zz;
-                    }
+                    if (minZ > zz) minZ = zz;
+                    if (maxZ < zz) maxZ = zz;
                 }
             }
 

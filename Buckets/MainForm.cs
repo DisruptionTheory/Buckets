@@ -24,6 +24,7 @@ namespace Buckets
             radBtnColorBW.Checked = true;
             radBtnThreadingSingle.Checked = true;
             radBtnGradient.Checked = true;
+            radBtnKDTRandStr.Checked = true;
 
             //fill algorithms box
             comboBoxAlgos.Items.Add("Additive");
@@ -57,7 +58,7 @@ namespace Buckets
             }
 
             int keyLength = 8;
-            if (!int.TryParse(txtBoxKeyLength.Text, out keyLength))
+            if (!int.TryParse(txtBoxKeyLength.Text, out keyLength) && radBtnKDTRandStr.Checked)
             {
                 MessageBox.Show("Key Length must be a 32 bit integer!");
                 return;
@@ -118,7 +119,9 @@ namespace Buckets
             //Process the hash
             HashMatrix.AdjustmentValue = aVal;
             HashMatrix.LoadMultiplier = loadMultiplier;
-            HashMatrix.ApplyHash(keyLength, algo);
+            if(radBtnKDTRandStr.Checked) HashMatrix.ApplyHashRandomStringKeys(keyLength, algo);
+            if (radBtnKDTIncNum.Checked) HashMatrix.ApplyHashIncrementalNumerics(algo);
+            
 
             //Draw the image
             if (radBtnGradient.Checked) HashMatrix.Draw2DGradiant(outputImage);

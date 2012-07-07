@@ -19,17 +19,29 @@ namespace Buckets
         /// </summary>
         /// <param name="size">The length of the alpha numeric string to be generated.</param>
         /// <returns>A random alpha numeric string.</returns>
-        public static string RandomAlphaNumeric(int size)
+        public static string RandomAlphaNumeric(int size, bool threaded = false)
         {
-            char[] buffer = new char[size];
-            lock (RandomNumberGenerator)
+            if (threaded)
             {
+                char[] buffer = new char[size];
+                lock (RandomNumberGenerator)
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        buffer[i] = charsAlphaNumeric[RandomNumberGenerator.Next(charsAlphaNumeric.Length)];
+                    }
+                }
+                return new string(buffer);
+            }
+            else
+            {
+                char[] buffer = new char[size];
                 for (int i = 0; i < size; i++)
                 {
                     buffer[i] = charsAlphaNumeric[RandomNumberGenerator.Next(charsAlphaNumeric.Length)];
                 }
+                return new string(buffer);
             }
-            return new string(buffer);
         }
 
         /// <summary>
