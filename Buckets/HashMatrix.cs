@@ -33,10 +33,18 @@ namespace Buckets
             set;
         }
 
+        private static bool threading;
         public static bool MultiThreaded
         {
-            get;
-            set;
+            get
+            {
+                return threading;
+            }
+            set
+            {
+                if (renderer3d != null) renderer3d.MultiThreaded = value;
+                threading = value;
+            }
         }
 
         public static bool BlackAndWhite
@@ -50,6 +58,12 @@ namespace Buckets
             get;
             set;
         }
+
+        public static bool CapturingMouse_3DSurface
+        {
+            get;
+            set;
+        }
             
 
         static HashMatrix()
@@ -57,6 +71,7 @@ namespace Buckets
             MultiThreaded = true;
             LoadMultiplier = 1;
             BlackAndWhite = false;
+            CapturingMouse_3DSurface = false;
         }
 
         /// <summary>
@@ -71,7 +86,7 @@ namespace Buckets
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                Parallel.For(0, pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * LoadMultiplier, i =>
+                ParallelPlus.StridingFor(0, pixelMatrix.GetLength(0) * pixelMatrix.GetLength(1) * LoadMultiplier, 100000, i =>
                 {
                     long position = function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
                     long row = position / pixelMatrix.GetLength(1);
@@ -94,12 +109,12 @@ namespace Buckets
             highVal = 0;
             if (MultiThreaded)
             {
-                Parallel.For(0, pixelMatrix.GetLength(0), x =>
+                ParallelPlus.StridingFor(0, pixelMatrix.GetLength(0), 100, x =>
                 {
-                    Parallel.For(0, pixelMatrix.GetLength(1), y =>
+                    for(int y = 0; y < pixelMatrix.GetLength(1); y++)
                     {
                         if (pixelMatrix[x, y] > highVal) Interlocked.Exchange(ref highVal, pixelMatrix[x, y]); 
-                    });
+                    }
                 });                
             }
             else
@@ -116,12 +131,8 @@ namespace Buckets
 
         public static void Draw2DGradiant(PictureBox pBox)
         {
-            //remove any attached mouse events
-            pBox.Paint -= Draw3DSurface_Paint;
-            pBox.MouseWheel -= Draw3DSurface_MouseWheel;
-            pBox.MouseDown -= Draw3DSurface_MouseDown;
-            pBox.MouseUp -= Draw3DSurface_MouseUp;
-            pBox.MouseMove -= Draw3DSurface_MouseMove;
+            //steal back mouse controls
+            if (CapturingMouse_3DSurface) CapturingMouse_3DSurface = false;
 
             if (BlackAndWhite)
             {
@@ -157,13 +168,16 @@ namespace Buckets
                 //set image on picturebox
                 pBox.Image = image;
             }
+            pBox.Invalidate();
         }
 
         public static void Draw3DSurface(PictureBox pBox)
         {
-            Bitmap b = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(b);
-            Plot3D.Surface3DRenderer renderer3d = new Plot3D.Surface3DRenderer(observableXYZ.x, observableXYZ.y, observableXYZ.z, screenXY.X, screenXY.Y, width, height, zoom, 0, 0);
+            //set up objects 
+            Bitmap bitmap = new Bitmap(width, height);
+            Graphics graphics = Graphics.FromImage(bitmap);
+            renderer3d = new Surface3DRenderer(observableXYZ.x, observableXYZ.y, observableXYZ.z, screenXY.X, screenXY.Y, width, height, zoom, 0, 0);
+            renderer3d.MultiThreaded = MultiThreaded;
 
             //set mouse events
             pBox.Paint += Draw3DSurface_Paint;
@@ -171,39 +185,56 @@ namespace Buckets
             pBox.MouseDown += Draw3DSurface_MouseDown;
             pBox.MouseUp += Draw3DSurface_MouseUp;
             pBox.MouseMove += Draw3DSurface_MouseMove;
+            CapturingMouse_3DSurface = true;
 
-            renderer3d.ColorSchema = ColorSchema.Greyscale();
-            renderer3d.RenderSurface(g, pixelMatrix, AdjustmentValue);
-            pBox.Image = b;
+            if (BlackAndWhite) renderer3d.ColorSchema = ColorSchema.Greyscale();
+            else renderer3d.ColorSchema = ColorSchema.Hsv;
+
+            //render surface
+            renderer3d.RenderSurface(graphics, pixelMatrix, AdjustmentValue);
+            graphics.Dispose();
+            pBox.Image = bitmap;
         }
 
-        private static void Draw3DSurface_Paint(Object sender, PaintEventArgs e)
+        public static void Draw3DSurface_Paint(Object sender, PaintEventArgs e)
         {
-            e.Graphics.Clear(((PictureBox)sender).BackColor);
+            PictureBox pBox = (PictureBox)sender;
+
+            //remove any attached mouse events if we are no longer using the 3d surface
+            if (!CapturingMouse_3DSurface)
+            {
+                pBox.Paint -= Draw3DSurface_Paint;
+                pBox.MouseWheel -= Draw3DSurface_MouseWheel;
+                pBox.MouseDown -= Draw3DSurface_MouseDown;
+                pBox.MouseUp -= Draw3DSurface_MouseUp;
+                pBox.MouseMove -= Draw3DSurface_MouseMove;
+                return;
+            }
+            e.Graphics.Clear(pBox.BackColor);
             renderer3d.RenderSurface(e.Graphics, pixelMatrix, AdjustmentValue);
         }
 
-        private static void Draw3DSurface_MouseWheel(Object sender, MouseEventArgs e)
+        public static void Draw3DSurface_MouseWheel(Object sender, MouseEventArgs e)
         {
             zoom += (e.Delta > 0 ? 1 : -1) * 0.04;
             renderer3d.ReCalculateTransformationsCoeficients(observableXYZ.x, observableXYZ.y, observableXYZ.z, screenXY.X, screenXY.Y, width, height, zoom, 0, 0);
             ((PictureBox)sender).Invalidate();
         }
 
-        private static void Draw3DSurface_MouseDown(Object sender, MouseEventArgs e)
+        public static void Draw3DSurface_MouseDown(Object sender, MouseEventArgs e)
         {
             mouseLocation = e.Location;
             if (e.Button == MouseButtons.Left) isMouseLeftButtonDown = true;
             if (e.Button == MouseButtons.Right) isMouseRightButtonDown = true;
         }
 
-        private static void Draw3DSurface_MouseUp(Object sender, MouseEventArgs e)
+        public static void Draw3DSurface_MouseUp(Object sender, MouseEventArgs e)
         {
             if (isMouseLeftButtonDown && (e.Button == MouseButtons.Left)) isMouseLeftButtonDown = false;
             if (isMouseRightButtonDown && (e.Button == MouseButtons.Right)) isMouseRightButtonDown = false;
         }
 
-        private static void Draw3DSurface_MouseMove(Object sender, MouseEventArgs e)
+        public static void Draw3DSurface_MouseMove(Object sender, MouseEventArgs e)
         {
             if (isMouseLeftButtonDown)
             {
@@ -224,6 +255,7 @@ namespace Buckets
                 ((PictureBox)sender).Invalidate();
             }
         }
-
     }
+
+    
 }

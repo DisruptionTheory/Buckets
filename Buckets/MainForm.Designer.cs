@@ -36,18 +36,20 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtBoxLoadMultiplier = new System.Windows.Forms.TextBox();
             this.grpBoxColorPallete = new System.Windows.Forms.GroupBox();
-            this.radBtnColorBW = new System.Windows.Forms.RadioButton();
             this.radBtnColorFullCollor = new System.Windows.Forms.RadioButton();
+            this.radBtnColorBW = new System.Windows.Forms.RadioButton();
             this.grpBoxThreads = new System.Windows.Forms.GroupBox();
-            this.radBtnThreadingSingle = new System.Windows.Forms.RadioButton();
             this.radBtnThreadingMulti = new System.Windows.Forms.RadioButton();
+            this.radBtnThreadingSingle = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
             this.txtBoxKeyLength = new System.Windows.Forms.TextBox();
             this.grpBoxImageType = new System.Windows.Forms.GroupBox();
-            this.radBtnGradient = new System.Windows.Forms.RadioButton();
             this.radBtnSurface = new System.Windows.Forms.RadioButton();
+            this.radBtnGradient = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.txtBoxAVal = new System.Windows.Forms.TextBox();
+            this.outputInfo = new System.Windows.Forms.RichTextBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.outputImage)).BeginInit();
             this.grpBoxColorPallete.SuspendLayout();
             this.grpBoxThreads.SuspendLayout();
@@ -82,6 +84,7 @@
             this.btnSave.TabIndex = 2;
             this.btnSave.Text = "Save Image";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label1
             // 
@@ -104,7 +107,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(539, 70);
+            this.label2.Location = new System.Drawing.Point(539, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(252, 26);
             this.label2.TabIndex = 6;
@@ -112,7 +115,7 @@
             // 
             // txtBoxLoadMultiplier
             // 
-            this.txtBoxLoadMultiplier.Location = new System.Drawing.Point(548, 99);
+            this.txtBoxLoadMultiplier.Location = new System.Drawing.Point(548, 78);
             this.txtBoxLoadMultiplier.Name = "txtBoxLoadMultiplier";
             this.txtBoxLoadMultiplier.Size = new System.Drawing.Size(234, 20);
             this.txtBoxLoadMultiplier.TabIndex = 7;
@@ -122,23 +125,12 @@
             // 
             this.grpBoxColorPallete.Controls.Add(this.radBtnColorFullCollor);
             this.grpBoxColorPallete.Controls.Add(this.radBtnColorBW);
-            this.grpBoxColorPallete.Location = new System.Drawing.Point(548, 177);
+            this.grpBoxColorPallete.Location = new System.Drawing.Point(548, 156);
             this.grpBoxColorPallete.Name = "grpBoxColorPallete";
             this.grpBoxColorPallete.Size = new System.Drawing.Size(234, 49);
             this.grpBoxColorPallete.TabIndex = 8;
             this.grpBoxColorPallete.TabStop = false;
             this.grpBoxColorPallete.Text = "Color Palette";
-            // 
-            // radBtnColorBW
-            // 
-            this.radBtnColorBW.AutoSize = true;
-            this.radBtnColorBW.Location = new System.Drawing.Point(16, 19);
-            this.radBtnColorBW.Name = "radBtnColorBW";
-            this.radBtnColorBW.Size = new System.Drawing.Size(72, 17);
-            this.radBtnColorBW.TabIndex = 0;
-            this.radBtnColorBW.TabStop = true;
-            this.radBtnColorBW.Text = "Grayscale";
-            this.radBtnColorBW.UseVisualStyleBackColor = true;
             // 
             // radBtnColorFullCollor
             // 
@@ -151,27 +143,27 @@
             this.radBtnColorFullCollor.Text = "Full Color";
             this.radBtnColorFullCollor.UseVisualStyleBackColor = true;
             // 
+            // radBtnColorBW
+            // 
+            this.radBtnColorBW.AutoSize = true;
+            this.radBtnColorBW.Location = new System.Drawing.Point(16, 19);
+            this.radBtnColorBW.Name = "radBtnColorBW";
+            this.radBtnColorBW.Size = new System.Drawing.Size(72, 17);
+            this.radBtnColorBW.TabIndex = 0;
+            this.radBtnColorBW.TabStop = true;
+            this.radBtnColorBW.Text = "Grayscale";
+            this.radBtnColorBW.UseVisualStyleBackColor = true;
+            // 
             // grpBoxThreads
             // 
             this.grpBoxThreads.Controls.Add(this.radBtnThreadingMulti);
             this.grpBoxThreads.Controls.Add(this.radBtnThreadingSingle);
-            this.grpBoxThreads.Location = new System.Drawing.Point(548, 242);
+            this.grpBoxThreads.Location = new System.Drawing.Point(548, 221);
             this.grpBoxThreads.Name = "grpBoxThreads";
             this.grpBoxThreads.Size = new System.Drawing.Size(234, 48);
             this.grpBoxThreads.TabIndex = 9;
             this.grpBoxThreads.TabStop = false;
             this.grpBoxThreads.Text = "Process Threading";
-            // 
-            // radBtnThreadingSingle
-            // 
-            this.radBtnThreadingSingle.AutoSize = true;
-            this.radBtnThreadingSingle.Location = new System.Drawing.Point(16, 19);
-            this.radBtnThreadingSingle.Name = "radBtnThreadingSingle";
-            this.radBtnThreadingSingle.Size = new System.Drawing.Size(103, 17);
-            this.radBtnThreadingSingle.TabIndex = 0;
-            this.radBtnThreadingSingle.TabStop = true;
-            this.radBtnThreadingSingle.Text = "Single Threaded";
-            this.radBtnThreadingSingle.UseVisualStyleBackColor = true;
             // 
             // radBtnThreadingMulti
             // 
@@ -183,11 +175,24 @@
             this.radBtnThreadingMulti.TabStop = true;
             this.radBtnThreadingMulti.Text = "Multi Threaded";
             this.radBtnThreadingMulti.UseVisualStyleBackColor = true;
+            this.radBtnThreadingMulti.CheckedChanged += new System.EventHandler(this.radBtnThreadingMulti_CheckedChanged);
+            // 
+            // radBtnThreadingSingle
+            // 
+            this.radBtnThreadingSingle.AutoSize = true;
+            this.radBtnThreadingSingle.Location = new System.Drawing.Point(16, 19);
+            this.radBtnThreadingSingle.Name = "radBtnThreadingSingle";
+            this.radBtnThreadingSingle.Size = new System.Drawing.Size(103, 17);
+            this.radBtnThreadingSingle.TabIndex = 0;
+            this.radBtnThreadingSingle.TabStop = true;
+            this.radBtnThreadingSingle.Text = "Single Threaded";
+            this.radBtnThreadingSingle.UseVisualStyleBackColor = true;
+            this.radBtnThreadingSingle.CheckedChanged += new System.EventHandler(this.radBtnThreadingSingle_CheckedChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(545, 305);
+            this.label3.Location = new System.Drawing.Point(545, 284);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(149, 13);
             this.label3.TabIndex = 10;
@@ -195,7 +200,7 @@
             // 
             // txtBoxKeyLength
             // 
-            this.txtBoxKeyLength.Location = new System.Drawing.Point(548, 322);
+            this.txtBoxKeyLength.Location = new System.Drawing.Point(548, 301);
             this.txtBoxKeyLength.Name = "txtBoxKeyLength";
             this.txtBoxKeyLength.Size = new System.Drawing.Size(234, 20);
             this.txtBoxKeyLength.TabIndex = 11;
@@ -205,23 +210,12 @@
             // 
             this.grpBoxImageType.Controls.Add(this.radBtnSurface);
             this.grpBoxImageType.Controls.Add(this.radBtnGradient);
-            this.grpBoxImageType.Location = new System.Drawing.Point(548, 349);
+            this.grpBoxImageType.Location = new System.Drawing.Point(548, 328);
             this.grpBoxImageType.Name = "grpBoxImageType";
             this.grpBoxImageType.Size = new System.Drawing.Size(234, 45);
             this.grpBoxImageType.TabIndex = 12;
             this.grpBoxImageType.TabStop = false;
             this.grpBoxImageType.Text = "Image Type";
-            // 
-            // radBtnGradient
-            // 
-            this.radBtnGradient.AutoSize = true;
-            this.radBtnGradient.Location = new System.Drawing.Point(16, 20);
-            this.radBtnGradient.Name = "radBtnGradient";
-            this.radBtnGradient.Size = new System.Drawing.Size(89, 17);
-            this.radBtnGradient.TabIndex = 0;
-            this.radBtnGradient.TabStop = true;
-            this.radBtnGradient.Text = "Gradient Map";
-            this.radBtnGradient.UseVisualStyleBackColor = true;
             // 
             // radBtnSurface
             // 
@@ -234,10 +228,21 @@
             this.radBtnSurface.Text = "3D Surface";
             this.radBtnSurface.UseVisualStyleBackColor = true;
             // 
+            // radBtnGradient
+            // 
+            this.radBtnGradient.AutoSize = true;
+            this.radBtnGradient.Location = new System.Drawing.Point(16, 20);
+            this.radBtnGradient.Name = "radBtnGradient";
+            this.radBtnGradient.Size = new System.Drawing.Size(89, 17);
+            this.radBtnGradient.TabIndex = 0;
+            this.radBtnGradient.TabStop = true;
+            this.radBtnGradient.Text = "Gradient Map";
+            this.radBtnGradient.UseVisualStyleBackColor = true;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(539, 122);
+            this.label4.Location = new System.Drawing.Point(539, 101);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(180, 26);
             this.label4.TabIndex = 13;
@@ -245,17 +250,36 @@
             // 
             // txtBoxAVal
             // 
-            this.txtBoxAVal.Location = new System.Drawing.Point(548, 151);
+            this.txtBoxAVal.Location = new System.Drawing.Point(548, 130);
             this.txtBoxAVal.Name = "txtBoxAVal";
             this.txtBoxAVal.Size = new System.Drawing.Size(234, 20);
             this.txtBoxAVal.TabIndex = 14;
             this.txtBoxAVal.Text = "12";
+            // 
+            // outputInfo
+            // 
+            this.outputInfo.Location = new System.Drawing.Point(548, 400);
+            this.outputInfo.Name = "outputInfo";
+            this.outputInfo.Size = new System.Drawing.Size(226, 54);
+            this.outputInfo.TabIndex = 15;
+            this.outputInfo.Text = "";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(548, 381);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(94, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Output Information";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(797, 530);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.outputInfo);
             this.Controls.Add(this.txtBoxAVal);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.grpBoxImageType);
@@ -307,6 +331,8 @@
         private System.Windows.Forms.RadioButton radBtnGradient;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtBoxAVal;
+        private System.Windows.Forms.RichTextBox outputInfo;
+        private System.Windows.Forms.Label label5;
     }
 }
 

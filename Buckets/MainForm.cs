@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace Buckets
 {
@@ -38,6 +40,10 @@ namespace Buckets
 
             //make form non resizable
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            //we need to capture the mouse wheel since the picture box never actually has focus
+            this.MouseWheel += MainForm_MouseWheel;
+
         }
 
         private void btnProcess_Click(object sender, EventArgs e)
@@ -102,11 +108,12 @@ namespace Buckets
             if (radBtnColorBW.Checked) HashMatrix.BlackAndWhite = true;
             else HashMatrix.BlackAndWhite = false;
 
-            if (radBtnThreadingSingle.Checked) HashMatrix.MultiThreaded = false;
-            else HashMatrix.MultiThreaded = true;
 
             //lock the main form, definitely not the best for usability but it doesn't matter for this project.
             this.Enabled = false;
+
+            //Get start time
+            DateTime processingStart = DateTime.Now;
 
             //Process the hash
             HashMatrix.AdjustmentValue = aVal;
@@ -117,8 +124,63 @@ namespace Buckets
             if (radBtnGradient.Checked) HashMatrix.Draw2DGradiant(outputImage);
             if (radBtnSurface.Checked) HashMatrix.Draw3DSurface(outputImage);
 
+            //Get the end time
+            DateTime processingFinish = DateTime.Now;
+
+            //Write output information
+            outputInfo.Clear();
+            string info = String.Empty;
+            info += "Elapsed Time: " + (processingFinish - processingStart).Duration().ToString() + Environment.NewLine;
+
+            outputInfo.Text = info;
+
+
             //unlock the main form
             this.Enabled = true;
+
+        }
+
+        private void MainForm_MouseWheel(Object sender, MouseEventArgs e)
+        {
+            if (HashMatrix.CapturingMouse_3DSurface) HashMatrix.Draw3DSurface_MouseWheel(outputImage, e);
+        }
+
+        private void radBtnThreadingMulti_CheckedChanged(object sender, EventArgs e)
+        {
+            HashMatrix.MultiThreaded = true;
+        }
+
+        private void radBtnThreadingSingle_CheckedChanged(object sender, EventArgs e)
+        {
+            HashMatrix.MultiThreaded = false;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saver = new SaveFileDialog();
+            saver.Filter = "Jpeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif";
+            saver.Title = "Save Rendered Bitmap";
+            saver.ShowDialog();
+            if (saver.FileName != String.Empty)
+            {
+                FileStream stream = (FileStream)saver.OpenFile();
+                switch (saver.FilterIndex)
+                {
+                    case 1:
+                        outputImage.Image.Save(stream, ImageFormat.Jpeg);
+                        break;
+                    case 2:
+                        outputImage.Image.Save(stream, ImageFormat.Bmp);
+                        break;
+                    case 3:
+                        outputImage.Image.Save(stream, ImageFormat.Gif);
+                        break;
+                    default:
+                        MessageBox.Show("Unknown file format! Cannot Save!");
+                        break;
+                }
+                stream.Close();
+            }
         }
 
         

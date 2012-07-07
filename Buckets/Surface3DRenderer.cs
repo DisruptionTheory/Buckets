@@ -9,6 +9,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Plot3D
 {
@@ -60,6 +62,12 @@ namespace Plot3D
             set { colorSchema = value; }
         }
 
+        public bool MultiThreaded
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         /// <summary>
@@ -77,6 +85,7 @@ namespace Plot3D
         /// <param name="screenHeightPhys">Height of the screen in meters.</param>
         public Surface3DRenderer(double obsX, double obsY, double obsZ, int xs0, int ys0, int screenWidth, int screenHeight, double screenDistance, double screenWidthPhys, double screenHeightPhys)
         {
+            MultiThreaded = false;
             ReCalculateTransformationsCoeficients(obsX, obsY, obsZ, xs0, ys0, screenWidth, screenHeight, screenDistance, screenWidthPhys, screenHeightPhys);
         }
 
@@ -137,25 +146,55 @@ namespace Plot3D
             return new PointF((float)(A * xn * screenDistance / zn + B), (float)(C * yn * screenDistance / zn + D));
         }
 
-        public void RenderSurface(Graphics graphics, long[,] matrix, int adjustmentValue)
+        public void RenderSurface(Graphics graphics, long[,] matrix, int adjustmentValue, bool newRender = false)
         {
-            //find largest value and if it exceeds half the height, force all values into the half height range
-            double largestVal = double.NegativeInfinity;
-            for (int x = 0; x < matrix.GetLength(0); x++)
+            if (!newRender)
             {
-                for (int y = 0; y < matrix.GetLength(1); y++)
+                if (MultiThreaded)
                 {
-                    if (Math.Abs(matrix[x, y]) > largestVal) largestVal = Math.Abs(matrix[x, y]);
-                }
-            }
-            if (largestVal > adjustmentValue)
-            {
-                double proportion = adjustmentValue / largestVal;
-                for (int x = 0; x < matrix.GetLength(0); x++)
-                {
-                    for (int y = 0; y < matrix.GetLength(1); y++)
+                    //find largest value and if it exceeds half the height, force all values into the half height range
+                    double largestVal = double.NegativeInfinity;
+                    
+                    ParallelPlus.StridingFor(0, matrix.GetLength(0), 100, x =>
                     {
-                        matrix[x, y] = (long)(matrix[x, y] * proportion);
+                        for(int y = 0; y < matrix.GetLength(1); y++)
+                        {
+                            if (Math.Abs(matrix[x, y]) > largestVal) largestVal = Math.Abs(matrix[x, y]);
+                        }
+                    });
+                    if (largestVal > adjustmentValue)
+                    {
+                        double proportion = adjustmentValue / largestVal;
+                        ParallelPlus.StridingFor(0, matrix.GetLength(0), 50, x=>
+                        {
+                            for(int y = 0; y < matrix.GetLength(1); y++)
+                            {
+                                matrix[x, y] = (long)(matrix[x, y] * proportion);
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    //find largest value and if it exceeds half the height, force all values into the half height range
+                    double largestVal = double.NegativeInfinity;
+                    for (int x = 0; x < matrix.GetLength(0); x++)
+                    {
+                        for (int y = 0; y < matrix.GetLength(1); y++)
+                        {
+                            if (Math.Abs(matrix[x, y]) > largestVal) largestVal = Math.Abs(matrix[x, y]);
+                        }
+                    }
+                    if (largestVal > adjustmentValue)
+                    {
+                        double proportion = adjustmentValue / largestVal;
+                        for (int x = 0; x < matrix.GetLength(0); x++)
+                        {
+                            for (int y = 0; y < matrix.GetLength(1); y++)
+                            {
+                                matrix[x, y] = (long)(matrix[x, y] * proportion);
+                            }
+                        }
                     }
                 }
             }
@@ -169,16 +208,35 @@ namespace Plot3D
             double minZ = double.PositiveInfinity, maxZ = double.NegativeInfinity;
             double[,] mesh = new double[(int)((endPoint.X - startPoint.X) / density + 1), (int)((endPoint.Y - startPoint.Y) / density + 1)];
             PointF[,] meshF = new PointF[mesh.GetLength(0), mesh.GetLength(1)];
-            for (int x = 0; x < mesh.GetLength(0); x++)
-            {
-                for (int y = 0; y < mesh.GetLength(1); y++)
-                {
-                    double zz = matrix[x, y];
-                    mesh[x, y] = zz;
-                    meshF[x, y] = Project(x, y, zz);
 
-                    if (minZ > zz) minZ = zz;
-                    if (maxZ < zz) maxZ = zz;
+            if (MultiThreaded)
+            {
+                ParallelPlus.StridingFor(0, mesh.GetLength(0), 100, x =>
+                {
+                    for(int y = 0; y < mesh.GetLength(1); y++)
+                    {
+                        double zz = matrix[x, y];
+                        mesh[x, y] = zz;
+                        meshF[x, y] = Project(x, y, zz);
+
+                        if (minZ > zz) minZ = zz;
+                        if (maxZ < zz) maxZ = zz;
+                    }
+                });
+            }
+            else
+            {
+                for (int x = 0; x < mesh.GetLength(0); x++)
+                {
+                    for (int y = 0; y < mesh.GetLength(1); y++)
+                    {
+                        double zz = matrix[x, y];
+                        mesh[x, y] = zz;
+                        meshF[x, y] = Project(x, y, zz);
+
+                        if (minZ > zz) minZ = zz;
+                        if (maxZ < zz) maxZ = zz;
+                    }
                 }
             }
 
