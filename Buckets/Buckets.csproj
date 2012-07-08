@@ -52,6 +52,7 @@
     <Compile Include="ColorSchema.cs" />
     <Compile Include="Generator.cs" />
     <Compile Include="HashMatrix.cs" />
+    <Compile Include="ISynchronizeInvokeExtension.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

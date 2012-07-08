@@ -155,17 +155,18 @@ namespace Plot3D
                 {
                     //find largest value and if it exceeds half the height, force all values into the half height range
                     long largestVal = long.MinValue;
-                    
+                    long lowestVal = long.MaxValue;
                     ParallelPlus.StridingFor(0, matrix.GetLength(0), x =>
                     {
                         for(int y = 0; y < matrix.GetLength(1); y++)
                         {
                             if (Math.Abs(matrix[x, y]) > Interlocked.Read(ref largestVal)) Interlocked.Exchange(ref largestVal, Math.Abs(matrix[x, y]));
+                            else if (Math.Abs(matrix[x, y]) < Interlocked.Read(ref lowestVal)) Interlocked.Exchange(ref lowestVal, Math.Abs(matrix[x, y]));
                         }
                     });
                     if (largestVal > adjustmentValue)
                     {
-                        double proportion = adjustmentValue / largestVal;
+                        double proportion = (double)adjustmentValue / (double)(largestVal - lowestVal);
                         ParallelPlus.StridingFor(0, matrix.GetLength(0), x=>
                         {
                             for(int y = 0; y < matrix.GetLength(1); y++)
@@ -178,17 +179,19 @@ namespace Plot3D
                 else
                 {
                     //find largest value and if it exceeds half the height, force all values into the half height range
-                    double largestVal = double.NegativeInfinity;
+                    long largestVal = long.MinValue;
+                    long lowestVal = long.MaxValue;
                     for (int x = 0; x < matrix.GetLength(0); x++)
                     {
                         for (int y = 0; y < matrix.GetLength(1); y++)
                         {
                             if (Math.Abs(matrix[x, y]) > largestVal) largestVal = Math.Abs(matrix[x, y]);
+                            else if (Math.Abs(matrix[x, y]) < lowestVal) lowestVal = Math.Abs(matrix[x, y]);
                         }
                     }
                     if (largestVal > adjustmentValue)
                     {
-                        double proportion = adjustmentValue / largestVal;
+                        double proportion = (double)adjustmentValue / (double)(largestVal - lowestVal);
                         for (int x = 0; x < matrix.GetLength(0); x++)
                         {
                             for (int y = 0; y < matrix.GetLength(1); y++)

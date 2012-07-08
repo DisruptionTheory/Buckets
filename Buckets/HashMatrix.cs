@@ -96,26 +96,31 @@ namespace Buckets
         {
             pixelMatrix = new long[width, height];
             long range = width * height;
+            MainForm.ProgressBarReset();
+            long bucketCount = range * LoadMultiplier;
+            long incVal = bucketCount / 100;
 
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                ParallelPlus.StridingFor(0, bucketCount, i =>
                 {
                     long position = function(Generator.RandomAlphaNumeric(stringSize, true), (uint)range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 });
             }
             else
             {
-                for (int i = 0; i < range * LoadMultiplier; i++)
+                for (int i = 0; i < bucketCount; i++)
                 {
                     long position = function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 }
             }
             FindHighVal();
@@ -291,7 +296,7 @@ namespace Buckets
 
             if (BlackAndWhite)
             {
-                double valueProportion = 255 / HighVal;
+                double valueProportion = (double)255 / (double)HighVal;
                 //Create and fill a bitmap
                 Bitmap image = new Bitmap(width, height);                
                 for (int x = 0; x < width; x++)
@@ -308,7 +313,7 @@ namespace Buckets
             }
             else
             {
-                double valueProportion = (int.MaxValue / HighVal);
+                double valueProportion = (double)int.MaxValue / (double)HighVal;
                 //Create and fill a bitmap
                 Bitmap image = new Bitmap(width, height);
                 for (int x = 0; x < width; x++)

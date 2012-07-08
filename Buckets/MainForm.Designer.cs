@@ -56,6 +56,7 @@
             this.radBtnKDTIncAlphaNumeric = new System.Windows.Forms.RadioButton();
             this.radBtnKDTIncNum = new System.Windows.Forms.RadioButton();
             this.radBtnKDTRandAlphaNumeric = new System.Windows.Forms.RadioButton();
+            this.pBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.outputImage)).BeginInit();
             this.grpBoxColorPallete.SuspendLayout();
             this.grpBoxThreads.SuspendLayout();
@@ -75,7 +76,7 @@
             // 
             // btnProcess
             // 
-            this.btnProcess.Location = new System.Drawing.Point(649, 593);
+            this.btnProcess.Location = new System.Drawing.Point(640, 589);
             this.btnProcess.Name = "btnProcess";
             this.btnProcess.Size = new System.Drawing.Size(237, 23);
             this.btnProcess.TabIndex = 1;
@@ -85,7 +86,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(649, 564);
+            this.btnSave.Location = new System.Drawing.Point(640, 564);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(237, 23);
             this.btnSave.TabIndex = 2;
@@ -96,7 +97,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(638, 9);
+            this.label1.Location = new System.Drawing.Point(629, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 4;
@@ -106,7 +107,7 @@
             // 
             this.comboBoxAlgos.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAlgos.FormattingEnabled = true;
-            this.comboBoxAlgos.Location = new System.Drawing.Point(647, 25);
+            this.comboBoxAlgos.Location = new System.Drawing.Point(638, 25);
             this.comboBoxAlgos.Name = "comboBoxAlgos";
             this.comboBoxAlgos.Size = new System.Drawing.Size(237, 21);
             this.comboBoxAlgos.TabIndex = 5;
@@ -114,7 +115,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(638, 49);
+            this.label2.Location = new System.Drawing.Point(629, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(252, 26);
             this.label2.TabIndex = 6;
@@ -122,7 +123,7 @@
             // 
             // txtBoxLoadMultiplier
             // 
-            this.txtBoxLoadMultiplier.Location = new System.Drawing.Point(647, 78);
+            this.txtBoxLoadMultiplier.Location = new System.Drawing.Point(638, 78);
             this.txtBoxLoadMultiplier.Name = "txtBoxLoadMultiplier";
             this.txtBoxLoadMultiplier.Size = new System.Drawing.Size(234, 20);
             this.txtBoxLoadMultiplier.TabIndex = 7;
@@ -132,7 +133,7 @@
             // 
             this.grpBoxColorPallete.Controls.Add(this.radBtnColorFullCollor);
             this.grpBoxColorPallete.Controls.Add(this.radBtnColorBW);
-            this.grpBoxColorPallete.Location = new System.Drawing.Point(647, 156);
+            this.grpBoxColorPallete.Location = new System.Drawing.Point(638, 156);
             this.grpBoxColorPallete.Name = "grpBoxColorPallete";
             this.grpBoxColorPallete.Size = new System.Drawing.Size(234, 39);
             this.grpBoxColorPallete.TabIndex = 8;
@@ -165,7 +166,7 @@
             // 
             this.grpBoxThreads.Controls.Add(this.radBtnThreadingMulti);
             this.grpBoxThreads.Controls.Add(this.radBtnThreadingSingle);
-            this.grpBoxThreads.Location = new System.Drawing.Point(647, 201);
+            this.grpBoxThreads.Location = new System.Drawing.Point(638, 201);
             this.grpBoxThreads.Name = "grpBoxThreads";
             this.grpBoxThreads.Size = new System.Drawing.Size(234, 48);
             this.grpBoxThreads.TabIndex = 9;
@@ -199,7 +200,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(649, 453);
+            this.label3.Location = new System.Drawing.Point(640, 453);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(148, 13);
             this.label3.TabIndex = 10;
@@ -207,7 +208,7 @@
             // 
             // txtBoxKeyLength
             // 
-            this.txtBoxKeyLength.Location = new System.Drawing.Point(652, 469);
+            this.txtBoxKeyLength.Location = new System.Drawing.Point(643, 469);
             this.txtBoxKeyLength.Name = "txtBoxKeyLength";
             this.txtBoxKeyLength.Size = new System.Drawing.Size(234, 20);
             this.txtBoxKeyLength.TabIndex = 11;
@@ -217,7 +218,7 @@
             // 
             this.grpBoxImageType.Controls.Add(this.radBtnSurface);
             this.grpBoxImageType.Controls.Add(this.radBtnGradient);
-            this.grpBoxImageType.Location = new System.Drawing.Point(647, 255);
+            this.grpBoxImageType.Location = new System.Drawing.Point(638, 255);
             this.grpBoxImageType.Name = "grpBoxImageType";
             this.grpBoxImageType.Size = new System.Drawing.Size(234, 48);
             this.grpBoxImageType.TabIndex = 12;
@@ -249,7 +250,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(638, 101);
+            this.label4.Location = new System.Drawing.Point(629, 101);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(180, 26);
             this.label4.TabIndex = 13;
@@ -257,7 +258,7 @@
             // 
             // txtBoxAVal
             // 
-            this.txtBoxAVal.Location = new System.Drawing.Point(647, 130);
+            this.txtBoxAVal.Location = new System.Drawing.Point(638, 130);
             this.txtBoxAVal.Name = "txtBoxAVal";
             this.txtBoxAVal.Size = new System.Drawing.Size(234, 20);
             this.txtBoxAVal.TabIndex = 14;
@@ -265,7 +266,7 @@
             // 
             // outputInfo
             // 
-            this.outputInfo.Location = new System.Drawing.Point(652, 508);
+            this.outputInfo.Location = new System.Drawing.Point(643, 508);
             this.outputInfo.Name = "outputInfo";
             this.outputInfo.Size = new System.Drawing.Size(226, 50);
             this.outputInfo.TabIndex = 15;
@@ -274,7 +275,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(649, 492);
+            this.label5.Location = new System.Drawing.Point(640, 492);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(94, 13);
             this.label5.TabIndex = 16;
@@ -287,7 +288,7 @@
             this.grpBoxData.Controls.Add(this.radBtnKDTIncAlphaNumeric);
             this.grpBoxData.Controls.Add(this.radBtnKDTIncNum);
             this.grpBoxData.Controls.Add(this.radBtnKDTRandAlphaNumeric);
-            this.grpBoxData.Location = new System.Drawing.Point(647, 310);
+            this.grpBoxData.Location = new System.Drawing.Point(638, 310);
             this.grpBoxData.Name = "grpBoxData";
             this.grpBoxData.Size = new System.Drawing.Size(234, 140);
             this.grpBoxData.TabIndex = 17;
@@ -349,11 +350,19 @@
             this.radBtnKDTRandAlphaNumeric.Text = "Random AlphaNumeric";
             this.radBtnKDTRandAlphaNumeric.UseVisualStyleBackColor = true;
             // 
+            // pBar
+            // 
+            this.pBar.Location = new System.Drawing.Point(12, 618);
+            this.pBar.Name = "pBar";
+            this.pBar.Size = new System.Drawing.Size(872, 23);
+            this.pBar.TabIndex = 18;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(897, 624);
+            this.ClientSize = new System.Drawing.Size(897, 646);
+            this.Controls.Add(this.pBar);
             this.Controls.Add(this.grpBoxData);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.outputInfo);
@@ -418,6 +427,7 @@
         private System.Windows.Forms.RadioButton radBtnKDTIncAlphaNumeric;
         private System.Windows.Forms.RadioButton radBtnKDTIncAlphaNumericSpec;
         private System.Windows.Forms.RadioButton radBtnKDTRandAlphaNumericSpec;
+        private System.Windows.Forms.ProgressBar pBar;
     }
 }
 

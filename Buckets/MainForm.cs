@@ -13,6 +13,8 @@ namespace Buckets
 {
     public partial class MainForm : Form
     {
+        private static ProgressBar progBar = null;
+
         public MainForm()
         {
             InitializeComponent();
@@ -20,6 +22,9 @@ namespace Buckets
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            //make the progress bar accessible
+            progBar = pBar;
+
             //preset radio buttons
             radBtnColorBW.Checked = true;
             radBtnThreadingSingle.Checked = true;
@@ -119,6 +124,8 @@ namespace Buckets
 
             //lock the main form, definitely not the best for usability but it doesn't matter for this project.
             this.Enabled = false;
+            Invalidate();
+            this.Refresh();
 
             //Get start time
             DateTime processingStart = DateTime.Now;
@@ -149,6 +156,8 @@ namespace Buckets
 
             //unlock the main form
             this.Enabled = true;
+            this.Invalidate();
+            this.Refresh();
 
         }
 
@@ -193,6 +202,17 @@ namespace Buckets
                 }
                 stream.Close();
             }
+        }
+
+
+        public static void ProgressBarIncrement()
+        {
+            progBar.InvokeEx(c => { c.Value += 1; c.Invalidate(); c.Refresh(); });            
+        }
+
+        public static void ProgressBarReset()
+        {
+            progBar.InvokeEx(c => { c.Maximum = 100; c.Value = 0;});
         }
 
         
