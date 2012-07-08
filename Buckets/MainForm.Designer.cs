@@ -292,7 +292,7 @@
             this.grpBoxData.Size = new System.Drawing.Size(234, 140);
             this.grpBoxData.TabIndex = 17;
             this.grpBoxData.TabStop = false;
-            this.grpBoxData.Text = "Key Data Type";
+            this.grpBoxData.Text = "Key Type";
             // 
             // radBtnKDTIncNum
             // 
