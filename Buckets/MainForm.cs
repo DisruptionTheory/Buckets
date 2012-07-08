@@ -36,6 +36,8 @@ namespace Buckets
             comboBoxAlgos.Items.Add("JenkinsOneAtATime");
             comboBoxAlgos.Items.Add("FNV1");
             comboBoxAlgos.Items.Add("FNV1A");
+            comboBoxAlgos.Items.Add("MurmurHash2");
+            comboBoxAlgos.Items.Add("MurmurHash3");
             //Set default to bernstein
             comboBoxAlgos.SelectedIndex = 4;
 
@@ -101,6 +103,12 @@ namespace Buckets
                 case 8:
                     algo = StringHashes.FNV1A;
                     break;
+                case 9:
+                    algo = StringHashes.MurmurHash2;
+                    break;
+                case 10:
+                    algo = StringHashes.MurmurHash3;
+                    break;
                 default:
                     MessageBox.Show("Error getting algorithm!");
                     return;
@@ -134,7 +142,7 @@ namespace Buckets
             //Write output information
             outputInfo.Clear();
             string info = String.Empty;
-            info += "Elapsed Time: " + (processingFinish - processingStart).Duration().ToString() + Environment.NewLine;
+            info += "Compute Time: " + (processingFinish - processingStart).Duration().ToString() + Environment.NewLine;
             info += "Key Count: " + HashMatrix.KeyCount + Environment.NewLine;
             info += "Heaviest Bucket: " + HashMatrix.HighVal + " keys." + Environment.NewLine;
             outputInfo.Text = info;

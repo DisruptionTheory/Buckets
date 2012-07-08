@@ -306,7 +306,7 @@ namespace Buckets
             }
             else
             {
-                double valueProportion = int.MaxValue / HighVal;
+                double valueProportion = (int.MaxValue / HighVal);
                 //Create and fill a bitmap
                 Bitmap image = new Bitmap(width, height);
                 for (int x = 0; x < width; x++)
@@ -315,7 +315,7 @@ namespace Buckets
                     {
                         double pixelValue = pixelMatrix[x, y] * valueProportion;
                         int roundedValue = (int)Math.Floor(pixelValue);
-                        image.SetPixel(x, y, Color.FromArgb(roundedValue));
+                        image.SetPixel(x, y, Color.FromArgb(int.MaxValue - roundedValue));
                     }
                 }
                 //set image on picturebox
