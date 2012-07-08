@@ -154,13 +154,13 @@ namespace Plot3D
                 if (MultiThreaded)
                 {
                     //find largest value and if it exceeds half the height, force all values into the half height range
-                    double largestVal = double.NegativeInfinity;
+                    long largestVal = long.MinValue;
                     
                     ParallelPlus.StridingFor(0, matrix.GetLength(0), x =>
                     {
                         for(int y = 0; y < matrix.GetLength(1); y++)
                         {
-                            if (Math.Abs(matrix[x, y]) > largestVal) largestVal = Math.Abs(matrix[x, y]);
+                            if (Math.Abs(matrix[x, y]) > Interlocked.Read(ref largestVal)) Interlocked.Exchange(ref largestVal, Math.Abs(matrix[x, y]));
                         }
                     });
                     if (largestVal > adjustmentValue)

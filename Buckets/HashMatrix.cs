@@ -260,15 +260,17 @@ namespace Buckets
         {
             //find highest value bucket to adjust color proportions accordingly.
             HighVal = 0;
+            long hVal = 0;
             if (MultiThreaded)
             {
                 ParallelPlus.StridingFor(0, width, x =>
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        if (pixelMatrix[x, y] > HighVal) HighVal = pixelMatrix[x, y];
+                        if (pixelMatrix[x, y] > Interlocked.Read(ref hVal)) Interlocked.Exchange(ref hVal, pixelMatrix[x, y]);
                     }
                 });
+                HighVal = hVal;
             }
             else
             {
@@ -291,7 +293,7 @@ namespace Buckets
             {
                 double valueProportion = 255 / HighVal;
                 //Create and fill a bitmap
-                Bitmap image = new Bitmap(width, height);
+                Bitmap image = new Bitmap(width, height);                
                 for (int x = 0; x < width; x++)
                 {
                     for (int y = 0; y < height; y++)
