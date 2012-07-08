@@ -395,6 +395,7 @@ namespace Buckets
             }
             e.Graphics.Clear(pBox.BackColor);
             renderer3d.RenderSurface(e.Graphics, pixelMatrix, AdjustmentValue);
+            e.Dispose();
         }
 
         public static void Draw3DSurface_MouseWheel(Object sender, MouseEventArgs e)

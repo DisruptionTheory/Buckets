@@ -246,6 +246,8 @@ namespace Plot3D
 
                         graphics.SmoothingMode = SmoothingMode.AntiAlias;
                         graphics.DrawPolygon(pen, polygon);
+
+                        
                     }
                 }
             for (int i = 0; i < brushes.Length; i++)

@@ -381,7 +381,7 @@
             this.Controls.Add(this.btnProcess);
             this.Controls.Add(this.outputImage);
             this.Name = "MainForm";
-            this.Text = "Buckets - Disruption Theory";
+            this.Text = "Buckets";
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.outputImage)).EndInit();
             this.grpBoxColorPallete.ResumeLayout(false);
