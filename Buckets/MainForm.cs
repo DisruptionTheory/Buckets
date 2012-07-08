@@ -24,7 +24,7 @@ namespace Buckets
             radBtnColorBW.Checked = true;
             radBtnThreadingSingle.Checked = true;
             radBtnGradient.Checked = true;
-            radBtnKDTRandStr.Checked = true;
+            radBtnKDTRandAlphaNumeric.Checked = true;
 
             //fill algorithms box
             comboBoxAlgos.Items.Add("Additive");
@@ -58,7 +58,7 @@ namespace Buckets
             }
 
             int keyLength = 8;
-            if (!int.TryParse(txtBoxKeyLength.Text, out keyLength) && radBtnKDTRandStr.Checked)
+            if (!int.TryParse(txtBoxKeyLength.Text, out keyLength) && radBtnKDTRandAlphaNumeric.Checked)
             {
                 MessageBox.Show("Key Length must be a 32 bit integer!");
                 return;
@@ -109,7 +109,6 @@ namespace Buckets
             if (radBtnColorBW.Checked) HashMatrix.BlackAndWhite = true;
             else HashMatrix.BlackAndWhite = false;
 
-
             //lock the main form, definitely not the best for usability but it doesn't matter for this project.
             this.Enabled = false;
 
@@ -119,10 +118,12 @@ namespace Buckets
             //Process the hash
             HashMatrix.AdjustmentValue = aVal;
             HashMatrix.LoadMultiplier = loadMultiplier;
-            if(radBtnKDTRandStr.Checked) HashMatrix.ApplyHashRandomStringKeys(keyLength, algo);
+            if(radBtnKDTRandAlphaNumeric.Checked) HashMatrix.ApplyHashRandomString(keyLength, algo);
             if (radBtnKDTIncNum.Checked) HashMatrix.ApplyHashIncrementalNumerics(algo);
+            if (radBtnKDTIncAlphaNumeric.Checked) HashMatrix.ApplyHashIncrementalString(algo);
+            if (radBtnKDTIncAlphaNumericSpec.Checked) HashMatrix.ApplyHashIncrementalStringSpecial(algo);
+            if (radBtnKDTRandAlphaNumericSpec.Checked) HashMatrix.ApplyHashRandomStringSpecial(keyLength, algo);
             
-
             //Draw the image
             if (radBtnGradient.Checked) HashMatrix.Draw2DGradiant(outputImage);
             if (radBtnSurface.Checked) HashMatrix.Draw3DSurface(outputImage);
@@ -134,9 +135,9 @@ namespace Buckets
             outputInfo.Clear();
             string info = String.Empty;
             info += "Elapsed Time: " + (processingFinish - processingStart).Duration().ToString() + Environment.NewLine;
-
+            info += "Key Count: " + HashMatrix.KeyCount + Environment.NewLine;
+            info += "Heaviest Bucket: " + HashMatrix.HighVal + " keys." + Environment.NewLine;
             outputInfo.Text = info;
-
 
             //unlock the main form
             this.Enabled = true;

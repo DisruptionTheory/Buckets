@@ -51,8 +51,11 @@
             this.outputInfo = new System.Windows.Forms.RichTextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.grpBoxData = new System.Windows.Forms.GroupBox();
-            this.radBtnKDTRandStr = new System.Windows.Forms.RadioButton();
             this.radBtnKDTIncNum = new System.Windows.Forms.RadioButton();
+            this.radBtnKDTRandAlphaNumeric = new System.Windows.Forms.RadioButton();
+            this.radBtnKDTIncAlphaNumeric = new System.Windows.Forms.RadioButton();
+            this.radBtnKDTRandAlphaNumericSpec = new System.Windows.Forms.RadioButton();
+            this.radBtnKDTIncAlphaNumericSpec = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.outputImage)).BeginInit();
             this.grpBoxColorPallete.SuspendLayout();
             this.grpBoxThreads.SuspendLayout();
@@ -196,7 +199,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(545, 393);
+            this.label3.Location = new System.Drawing.Point(550, 453);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(148, 13);
             this.label3.TabIndex = 10;
@@ -204,7 +207,7 @@
             // 
             // txtBoxKeyLength
             // 
-            this.txtBoxKeyLength.Location = new System.Drawing.Point(548, 409);
+            this.txtBoxKeyLength.Location = new System.Drawing.Point(553, 469);
             this.txtBoxKeyLength.Name = "txtBoxKeyLength";
             this.txtBoxKeyLength.Size = new System.Drawing.Size(234, 20);
             this.txtBoxKeyLength.TabIndex = 11;
@@ -262,16 +265,16 @@
             // 
             // outputInfo
             // 
-            this.outputInfo.Location = new System.Drawing.Point(545, 448);
+            this.outputInfo.Location = new System.Drawing.Point(550, 508);
             this.outputInfo.Name = "outputInfo";
-            this.outputInfo.Size = new System.Drawing.Size(226, 108);
+            this.outputInfo.Size = new System.Drawing.Size(226, 50);
             this.outputInfo.TabIndex = 15;
             this.outputInfo.Text = "";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(545, 432);
+            this.label5.Location = new System.Drawing.Point(550, 492);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(94, 13);
             this.label5.TabIndex = 16;
@@ -279,36 +282,72 @@
             // 
             // grpBoxData
             // 
+            this.grpBoxData.Controls.Add(this.radBtnKDTIncAlphaNumericSpec);
+            this.grpBoxData.Controls.Add(this.radBtnKDTRandAlphaNumericSpec);
+            this.grpBoxData.Controls.Add(this.radBtnKDTIncAlphaNumeric);
             this.grpBoxData.Controls.Add(this.radBtnKDTIncNum);
-            this.grpBoxData.Controls.Add(this.radBtnKDTRandStr);
+            this.grpBoxData.Controls.Add(this.radBtnKDTRandAlphaNumeric);
             this.grpBoxData.Location = new System.Drawing.Point(548, 310);
             this.grpBoxData.Name = "grpBoxData";
-            this.grpBoxData.Size = new System.Drawing.Size(234, 71);
+            this.grpBoxData.Size = new System.Drawing.Size(234, 140);
             this.grpBoxData.TabIndex = 17;
             this.grpBoxData.TabStop = false;
             this.grpBoxData.Text = "Key Data Type";
             // 
-            // radBtnKDTRandStr
-            // 
-            this.radBtnKDTRandStr.AutoSize = true;
-            this.radBtnKDTRandStr.Location = new System.Drawing.Point(16, 20);
-            this.radBtnKDTRandStr.Name = "radBtnKDTRandStr";
-            this.radBtnKDTRandStr.Size = new System.Drawing.Size(95, 17);
-            this.radBtnKDTRandStr.TabIndex = 0;
-            this.radBtnKDTRandStr.TabStop = true;
-            this.radBtnKDTRandStr.Text = "Random String";
-            this.radBtnKDTRandStr.UseVisualStyleBackColor = true;
-            // 
             // radBtnKDTIncNum
             // 
             this.radBtnKDTIncNum.AutoSize = true;
-            this.radBtnKDTIncNum.Location = new System.Drawing.Point(16, 43);
+            this.radBtnKDTIncNum.Location = new System.Drawing.Point(16, 66);
             this.radBtnKDTIncNum.Name = "radBtnKDTIncNum";
             this.radBtnKDTIncNum.Size = new System.Drawing.Size(122, 17);
             this.radBtnKDTIncNum.TabIndex = 1;
             this.radBtnKDTIncNum.TabStop = true;
             this.radBtnKDTIncNum.Text = "Incremental Numeric";
             this.radBtnKDTIncNum.UseVisualStyleBackColor = true;
+            // 
+            // radBtnKDTRandAlphaNumeric
+            // 
+            this.radBtnKDTRandAlphaNumeric.AutoSize = true;
+            this.radBtnKDTRandAlphaNumeric.Location = new System.Drawing.Point(16, 20);
+            this.radBtnKDTRandAlphaNumeric.Name = "radBtnKDTRandAlphaNumeric";
+            this.radBtnKDTRandAlphaNumeric.Size = new System.Drawing.Size(134, 17);
+            this.radBtnKDTRandAlphaNumeric.TabIndex = 0;
+            this.radBtnKDTRandAlphaNumeric.TabStop = true;
+            this.radBtnKDTRandAlphaNumeric.Text = "Random AlphaNumeric";
+            this.radBtnKDTRandAlphaNumeric.UseVisualStyleBackColor = true;
+            // 
+            // radBtnKDTIncAlphaNumeric
+            // 
+            this.radBtnKDTIncAlphaNumeric.AutoSize = true;
+            this.radBtnKDTIncAlphaNumeric.Location = new System.Drawing.Point(16, 90);
+            this.radBtnKDTIncAlphaNumeric.Name = "radBtnKDTIncAlphaNumeric";
+            this.radBtnKDTIncAlphaNumeric.Size = new System.Drawing.Size(149, 17);
+            this.radBtnKDTIncAlphaNumeric.TabIndex = 2;
+            this.radBtnKDTIncAlphaNumeric.TabStop = true;
+            this.radBtnKDTIncAlphaNumeric.Text = "Incremental AlphaNumeric";
+            this.radBtnKDTIncAlphaNumeric.UseVisualStyleBackColor = true;
+            // 
+            // radBtnKDTRandAlphaNumericSpec
+            // 
+            this.radBtnKDTRandAlphaNumericSpec.AutoSize = true;
+            this.radBtnKDTRandAlphaNumericSpec.Location = new System.Drawing.Point(16, 43);
+            this.radBtnKDTRandAlphaNumericSpec.Name = "radBtnKDTRandAlphaNumericSpec";
+            this.radBtnKDTRandAlphaNumericSpec.Size = new System.Drawing.Size(193, 17);
+            this.radBtnKDTRandAlphaNumericSpec.TabIndex = 3;
+            this.radBtnKDTRandAlphaNumericSpec.TabStop = true;
+            this.radBtnKDTRandAlphaNumericSpec.Text = "Random AlphaNumeric and Special";
+            this.radBtnKDTRandAlphaNumericSpec.UseVisualStyleBackColor = true;
+            // 
+            // radBtnKDTIncAlphaNumericSpec
+            // 
+            this.radBtnKDTIncAlphaNumericSpec.AutoSize = true;
+            this.radBtnKDTIncAlphaNumericSpec.Location = new System.Drawing.Point(16, 114);
+            this.radBtnKDTIncAlphaNumericSpec.Name = "radBtnKDTIncAlphaNumericSpec";
+            this.radBtnKDTIncAlphaNumericSpec.Size = new System.Drawing.Size(208, 17);
+            this.radBtnKDTIncAlphaNumericSpec.TabIndex = 4;
+            this.radBtnKDTIncAlphaNumericSpec.TabStop = true;
+            this.radBtnKDTIncAlphaNumericSpec.Text = "Incremental AlphaNumeric and Special";
+            this.radBtnKDTIncAlphaNumericSpec.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -374,8 +413,11 @@
         private System.Windows.Forms.RichTextBox outputInfo;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox grpBoxData;
-        private System.Windows.Forms.RadioButton radBtnKDTRandStr;
+        private System.Windows.Forms.RadioButton radBtnKDTRandAlphaNumeric;
         private System.Windows.Forms.RadioButton radBtnKDTIncNum;
+        private System.Windows.Forms.RadioButton radBtnKDTIncAlphaNumeric;
+        private System.Windows.Forms.RadioButton radBtnKDTIncAlphaNumericSpec;
+        private System.Windows.Forms.RadioButton radBtnKDTRandAlphaNumericSpec;
     }
 }
 

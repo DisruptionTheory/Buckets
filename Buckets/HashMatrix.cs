@@ -16,7 +16,6 @@ namespace Buckets
         private static int width = 600;
         private static int height = 600;
         private static long[,] pixelMatrix = new long[width, height];
-        private static long highVal = 0;
 
         //3D properties
         private static Surface3DRenderer renderer3d;
@@ -27,10 +26,24 @@ namespace Buckets
         private static Point screenXY = new Point(0, 0);
         private static Point3D observableXYZ = new Point3D(width / 3, height / 3, 50);
 
+        public static long KeyCount
+        {
+            get
+            {
+                return width * height * LoadMultiplier;
+            }
+        }
+
         public static int LoadMultiplier
         {
             get;
             set;
+        }
+
+        public static long HighVal
+        {
+            get;
+            private set;
         }
 
         private static bool threading;
@@ -72,13 +85,14 @@ namespace Buckets
             LoadMultiplier = 1;
             BlackAndWhite = false;
             CapturingMouse_3DSurface = false;
+            HighVal = 0;
         }
 
         /// <summary>
-        /// Fill the internal pixel matrix according to the specified hash function. using Randomly Generated String Keys
+        /// Fill the internal pixel matrix according to the specified hash function. using Randomly Generated strings.
         /// </summary>
         /// <param name="function">The hash function to fill according to.</param>
-        public static void ApplyHashRandomStringKeys(int stringSize, Func<string, uint, uint> function)
+        public static void ApplyHashRandomString(int stringSize, Func<string, uint, uint> function)
         {
             pixelMatrix = new long[width, height];
             long range = width * height;
@@ -106,6 +120,108 @@ namespace Buckets
             }
             FindHighVal();
         }
+
+        /// <summary>
+        /// Fill the internal pixel matrix according to the specified hash function. using Randomly Generated alpha numeric strings with special characters.
+        /// </summary>
+        /// <param name="function">The hash function to fill according to.</param>
+        public static void ApplyHashRandomStringSpecial(int stringSize, Func<string, uint, uint> function)
+        {
+            pixelMatrix = new long[width, height];
+            long range = width * height;
+
+            //fill pixel matrix with number of times a bucket gets a value
+            if (MultiThreaded)
+            {
+                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                {
+                    long position = function(Generator.RandomAlphaNumericSpecial(stringSize, true), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                });
+            }
+            else
+            {
+                for (int i = 0; i < range * LoadMultiplier; i++)
+                {
+                    long position = function(Generator.RandomAlphaNumericSpecial(stringSize), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                }
+            }
+            FindHighVal();
+        }
+
+        /// <summary>
+        /// Fill the internal pixel matrix according to the specified hash function. using numbers 0 to load limit converted to alpha numeric strings
+        /// </summary>
+        /// <param name="function">The hash function to fill according to.</param>
+        public static void ApplyHashIncrementalString(Func<string, uint, uint> function)
+        {
+            pixelMatrix = new long[width, height];
+            long range = width * height;
+
+            //fill pixel matrix with number of times a bucket gets a value
+            if (MultiThreaded)
+            {
+                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                {
+                    long position = function(Generator.NumberToTextAlphaNumeric(i), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                });
+            }
+            else
+            {
+                for (int i = 0; i < range * LoadMultiplier; i++)
+                {
+                    string o = Generator.NumberToTextAlphaNumeric(i);
+                    long position = function(Generator.NumberToTextAlphaNumeric(i), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                }
+            }
+            FindHighVal();
+        }
+
+        /// <summary>
+        /// Fill the internal pixel matrix according to the specified hash function. using numbers 0 to load limit converted to random alpha numeric strings with special characters.
+        /// </summary>
+        /// <param name="function">The hash function to fill according to.</param>
+        public static void ApplyHashIncrementalStringSpecial(Func<string, uint, uint> function)
+        {
+            pixelMatrix = new long[width, height];
+            long range = width * height;
+
+            //fill pixel matrix with number of times a bucket gets a value
+            if (MultiThreaded)
+            {
+                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                {
+                    long position = function(Generator.NumberToTextAlphaNumericSpecial(i), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                });
+            }
+            else
+            {
+                for (int i = 0; i < range * LoadMultiplier; i++)
+                {
+                    string o = Generator.NumberToTextAlphaNumeric(i);
+                    long position = function(Generator.NumberToTextAlphaNumericSpecial(i), (uint)range);
+                    long y = position / height;
+                    long x = position % width;
+                    pixelMatrix[x, y] += 1;
+                }
+            }
+            FindHighVal();
+        }
+
 
         /// <summary>
         /// Fill the internal pixel matrix according to the specified hash function. using numbers 0 to load limit as strings.
@@ -143,14 +259,14 @@ namespace Buckets
         private static void FindHighVal()
         {
             //find highest value bucket to adjust color proportions accordingly.
-            highVal = 0;
+            HighVal = 0;
             if (MultiThreaded)
             {
                 ParallelPlus.StridingFor(0, width, x =>
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        if (pixelMatrix[x, y] > highVal) highVal = pixelMatrix[x, y];
+                        if (pixelMatrix[x, y] > HighVal) HighVal = pixelMatrix[x, y];
                     }
                 });
             }
@@ -160,7 +276,7 @@ namespace Buckets
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        if (pixelMatrix[x, y] > highVal) highVal = pixelMatrix[x, y];
+                        if (pixelMatrix[x, y] > HighVal) HighVal = pixelMatrix[x, y];
                     }
                 }
             }
@@ -173,7 +289,7 @@ namespace Buckets
 
             if (BlackAndWhite)
             {
-                double valueProportion = 255 / highVal;
+                double valueProportion = 255 / HighVal;
                 //Create and fill a bitmap
                 Bitmap image = new Bitmap(width, height);
                 for (int x = 0; x < width; x++)
@@ -190,7 +306,7 @@ namespace Buckets
             }
             else
             {
-                double valueProportion = int.MaxValue / highVal;
+                double valueProportion = int.MaxValue / HighVal;
                 //Create and fill a bitmap
                 Bitmap image = new Bitmap(width, height);
                 for (int x = 0; x < width; x++)
