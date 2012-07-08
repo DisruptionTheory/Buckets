@@ -46,6 +46,12 @@ namespace Buckets
             private set;
         }
 
+        public static long LowVal
+        {
+            get;
+            private set;
+        }
+
         private static bool threading;
         public static bool MultiThreaded
         {
@@ -94,6 +100,7 @@ namespace Buckets
             BlackAndWhite = false;
             CapturingMouse_3DSurface = false;
             HighVal = 0;
+            LowVal = 0;
         }
 
         /// <summary>
@@ -288,7 +295,8 @@ namespace Buckets
         {
             //find highest value bucket to adjust color proportions accordingly.
             HighVal = 0;
-            long hVal = 0;
+            long hVal = long.MinValue;
+            long lVal = long.MaxValue;
             if (MultiThreaded)
             {
                 ParallelPlus.StridingFor(0, width, x =>
@@ -296,9 +304,11 @@ namespace Buckets
                     for (int y = 0; y < height; y++)
                     {
                         if (pixelMatrix[x, y] > Interlocked.Read(ref hVal)) Interlocked.Exchange(ref hVal, pixelMatrix[x, y]);
+                        if (pixelMatrix[x, y] < Interlocked.Read(ref lVal)) Interlocked.Exchange(ref lVal, pixelMatrix[x, y]);
                     }
                 });
                 HighVal = hVal;
+                LowVal = lVal;
             }
             else
             {
@@ -307,6 +317,7 @@ namespace Buckets
                     for (int y = 0; y < height; y++)
                     {
                         if (pixelMatrix[x, y] > HighVal) HighVal = pixelMatrix[x, y];
+                        if (pixelMatrix[x, y] < LowVal) LowVal = pixelMatrix[x, y];
                     }
                 }
             }

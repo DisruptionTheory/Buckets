@@ -70,6 +70,7 @@ namespace Buckets
                 MessageBox.Show("Load Multiplier must be a 32 bit integer!");
                 return;
             }
+            if (loadMultiplier < 1) loadMultiplier = 1;
 
             int keyLength = 8;
             if (!int.TryParse(txtBoxKeyLength.Text, out keyLength) && radBtnKDTRandAlphaNumeric.Checked)
@@ -77,6 +78,7 @@ namespace Buckets
                 MessageBox.Show("Key Length must be a 32 bit integer!");
                 return;
             }
+            if (keyLength < 1) keyLength = 1;
 
             short aVal = 12;
             if (!short.TryParse(txtBoxAVal.Text, out aVal))
@@ -84,6 +86,7 @@ namespace Buckets
                 MessageBox.Show("Adjustment Value must be an 8 bit integer!");
                 return;
             }
+            if (aVal < 1) aVal = 1;
 
             Func<string, uint, uint> algo;
             switch (comboBoxAlgos.SelectedIndex)
@@ -163,9 +166,10 @@ namespace Buckets
             outputBox.InvokeEx(o => o.Clear());
             string info = String.Empty;
             info += "Compute Time: " + (processingFinish - processingStart).Duration().ToString() + Environment.NewLine;
-            info += "Bucket Count: " + (HashMatrix.KeyCount / HashMatrix.AdjustmentValue).ToString() + Environment.NewLine;
+            info += "Bucket Count: " + HashMatrix.Range + Environment.NewLine;
             info += "Key Count: " + HashMatrix.KeyCount + Environment.NewLine;
             info += "Heaviest Bucket: " + HashMatrix.HighVal + " keys." + Environment.NewLine;
+            info += "Lightest Bucket: " + HashMatrix.LowVal + " keys." + Environment.NewLine;
             outputBox.InvokeEx(o => o.Text = info);
 
             //unlock the main form

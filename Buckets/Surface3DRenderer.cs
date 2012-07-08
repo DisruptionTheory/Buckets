@@ -196,7 +196,7 @@ namespace Plot3D
                         {
                             for (int y = 0; y < matrix.GetLength(1); y++)
                             {
-                                matrix[x, y] = (long)(matrix[x, y] * proportion);
+                                matrix[x, y] = (long)Math.Ceiling(matrix[x, y] * proportion);
                             }
                         }
                     }
@@ -227,6 +227,7 @@ namespace Plot3D
             }
 
             double cc = (maxZ - minZ) / (brushes.Length - 1.0);
+            if (cc == 0) cc = 1;
 
             using (Pen pen = new Pen(penColor))
                 for (int x = 0; x < mesh.GetLength(0) - 1; x++)
