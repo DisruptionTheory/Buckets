@@ -10,11 +10,11 @@ namespace Buckets
         {
             if (@this.InvokeRequired)
             {
-                @this.Invoke(action, new object[] { @this });
+                @this.BeginInvoke(action, new object[] { @this });
             }
             else
             {
-                action(@this);
+                action.BeginInvoke(@this, null, null);
             }
         }
     }

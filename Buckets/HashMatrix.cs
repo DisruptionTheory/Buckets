@@ -77,6 +77,14 @@ namespace Buckets
             get;
             set;
         }
+
+        public static long Range
+        {
+            get
+            {
+                return width * height;
+            }
+        }
             
 
         static HashMatrix()
@@ -95,9 +103,8 @@ namespace Buckets
         public static void ApplyHashRandomString(int stringSize, Func<string, uint, uint> function)
         {
             pixelMatrix = new long[width, height];
-            long range = width * height;
             MainForm.ProgressBarReset();
-            long bucketCount = range * LoadMultiplier;
+            long bucketCount = Range * LoadMultiplier;
             long incVal = bucketCount / 100;
 
             //fill pixel matrix with number of times a bucket gets a value
@@ -105,7 +112,7 @@ namespace Buckets
             {
                 ParallelPlus.StridingFor(0, bucketCount, i =>
                 {
-                    long position = function(Generator.RandomAlphaNumeric(stringSize, true), (uint)range);
+                    long position = function(Generator.RandomAlphaNumeric(stringSize, true), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
@@ -116,7 +123,7 @@ namespace Buckets
             {
                 for (int i = 0; i < bucketCount; i++)
                 {
-                    long position = function(Generator.RandomAlphaNumeric(stringSize), (uint)range);
+                    long position = function(Generator.RandomAlphaNumeric(stringSize), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
@@ -133,27 +140,31 @@ namespace Buckets
         public static void ApplyHashRandomStringSpecial(int stringSize, Func<string, uint, uint> function)
         {
             pixelMatrix = new long[width, height];
-            long range = width * height;
+            MainForm.ProgressBarReset();
+            long bucketCount = Range * LoadMultiplier;
+            long incVal = bucketCount / 100;
 
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                ParallelPlus.StridingFor(0, bucketCount, i =>
                 {
-                    long position = function(Generator.RandomAlphaNumericSpecial(stringSize, true), (uint)range);
+                    long position = function(Generator.RandomAlphaNumericSpecial(stringSize, true), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 });
             }
             else
             {
-                for (int i = 0; i < range * LoadMultiplier; i++)
+                for (int i = 0; i < bucketCount; i++)
                 {
-                    long position = function(Generator.RandomAlphaNumericSpecial(stringSize), (uint)range);
+                    long position = function(Generator.RandomAlphaNumericSpecial(stringSize), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 }
             }
             FindHighVal();
@@ -166,28 +177,32 @@ namespace Buckets
         public static void ApplyHashIncrementalString(Func<string, uint, uint> function)
         {
             pixelMatrix = new long[width, height];
-            long range = width * height;
+            MainForm.ProgressBarReset();
+            long bucketCount = Range * LoadMultiplier;
+            long incVal = bucketCount / 100;
 
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                ParallelPlus.StridingFor(0, bucketCount, i =>
                 {
-                    long position = function(Generator.NumberToTextAlphaNumeric(i), (uint)range);
+                    long position = function(Generator.NumberToTextAlphaNumeric(i), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 });
             }
             else
             {
-                for (int i = 0; i < range * LoadMultiplier; i++)
+                for (int i = 0; i < bucketCount; i++)
                 {
                     string o = Generator.NumberToTextAlphaNumeric(i);
-                    long position = function(Generator.NumberToTextAlphaNumeric(i), (uint)range);
+                    long position = function(Generator.NumberToTextAlphaNumeric(i), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 }
             }
             FindHighVal();
@@ -200,28 +215,32 @@ namespace Buckets
         public static void ApplyHashIncrementalStringSpecial(Func<string, uint, uint> function)
         {
             pixelMatrix = new long[width, height];
-            long range = width * height;
+            MainForm.ProgressBarReset();
+            long bucketCount = Range * LoadMultiplier;
+            long incVal = bucketCount / 100;
 
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                ParallelPlus.StridingFor(0, bucketCount, i =>
                 {
-                    long position = function(Generator.NumberToTextAlphaNumericSpecial(i), (uint)range);
+                    long position = function(Generator.NumberToTextAlphaNumericSpecial(i), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 });
             }
             else
             {
-                for (int i = 0; i < range * LoadMultiplier; i++)
+                for (int i = 0; i < bucketCount; i++)
                 {
                     string o = Generator.NumberToTextAlphaNumeric(i);
-                    long position = function(Generator.NumberToTextAlphaNumericSpecial(i), (uint)range);
+                    long position = function(Generator.NumberToTextAlphaNumericSpecial(i), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 }
             }
             FindHighVal();
@@ -235,27 +254,31 @@ namespace Buckets
         public static void ApplyHashIncrementalNumerics(Func<string, uint, uint> function)
         {
             pixelMatrix = new long[width, height];
-            long range = width * height;
+            MainForm.ProgressBarReset();
+            long bucketCount = Range * LoadMultiplier;
+            long incVal = bucketCount / 100;
 
             //fill pixel matrix with number of times a bucket gets a value
             if (MultiThreaded)
             {
-                ParallelPlus.StridingFor(0, range * LoadMultiplier, i =>
+                ParallelPlus.StridingFor(0, bucketCount, i =>
                 {
-                    long position = function(i.ToString(), (uint)range);
+                    long position = function(i.ToString(), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 });
             }
             else
             {
-                for (int i = 0; i < range * LoadMultiplier; i++)
+                for (int i = 0; i < bucketCount; i++)
                 {
-                    long position = function(i.ToString(), (uint)range);
+                    long position = function(i.ToString(), (uint)Range);
                     long y = position / height;
                     long x = position % width;
                     pixelMatrix[x, y] += 1;
+                    if (i % incVal == 0) MainForm.ProgressBarIncrement();
                 }
             }
             FindHighVal();

@@ -8,12 +8,17 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Threading.Tasks;
 
 namespace Buckets
 {
     public partial class MainForm : Form
     {
         private static ProgressBar progBar = null;
+        private static DateTime processingStart;
+        private static DateTime processingFinish;
+        private static Form main = null;
+        private static RichTextBox outputBox;
 
         public MainForm()
         {
@@ -22,8 +27,10 @@ namespace Buckets
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //make the progress bar accessible
+            //make certain things globally accesible, sloppy but quick
             progBar = pBar;
+            main = this;
+            outputBox = outputInfo;
 
             //preset radio buttons
             radBtnColorBW.Checked = true;
@@ -128,37 +135,41 @@ namespace Buckets
             this.Refresh();
 
             //Get start time
-            DateTime processingStart = DateTime.Now;
+            processingStart = DateTime.Now;
 
             //Process the hash
             HashMatrix.AdjustmentValue = aVal;
             HashMatrix.LoadMultiplier = loadMultiplier;
-            if(radBtnKDTRandAlphaNumeric.Checked) HashMatrix.ApplyHashRandomString(keyLength, algo);
-            if (radBtnKDTIncNum.Checked) HashMatrix.ApplyHashIncrementalNumerics(algo);
-            if (radBtnKDTIncAlphaNumeric.Checked) HashMatrix.ApplyHashIncrementalString(algo);
-            if (radBtnKDTIncAlphaNumericSpec.Checked) HashMatrix.ApplyHashIncrementalStringSpecial(algo);
-            if (radBtnKDTRandAlphaNumericSpec.Checked) HashMatrix.ApplyHashRandomStringSpecial(keyLength, algo);
-            
-            //Draw the image
-            if (radBtnGradient.Checked) HashMatrix.Draw2DGradiant(outputImage);
-            if (radBtnSurface.Checked) HashMatrix.Draw3DSurface(outputImage);
+            if (radBtnKDTRandAlphaNumeric.Checked) new Action<int, Func<string, uint, uint>>(HashMatrix.ApplyHashRandomString).BeginInvoke(keyLength, algo, drawImage, null);
+            if (radBtnKDTRandAlphaNumericSpec.Checked) new Action<int, Func<string, uint, uint>>(HashMatrix.ApplyHashRandomStringSpecial).BeginInvoke(keyLength, algo, drawImage, null);
+            if (radBtnKDTIncNum.Checked) new Action<Func<string, uint, uint>>(HashMatrix.ApplyHashIncrementalNumerics).BeginInvoke(algo, drawImage, null);   
+            if (radBtnKDTIncAlphaNumeric.Checked) new Action<Func<string, uint, uint>>(HashMatrix.ApplyHashIncrementalString).BeginInvoke(algo, drawImage, null);   
+            if (radBtnKDTIncAlphaNumericSpec.Checked) new Action<Func<string, uint, uint>>(HashMatrix.ApplyHashIncrementalStringSpecial).BeginInvoke(algo, drawImage, null);   
+        }
 
+        private void drawImage(IAsyncResult result)
+        {
+            //Draw the image
+            if (radBtnGradient.Checked) new Action<PictureBox>(HashMatrix.Draw2DGradiant).BeginInvoke(outputImage, completeProcessing, null);
+            if (radBtnSurface.Checked) new Action<PictureBox>(HashMatrix.Draw3DSurface).BeginInvoke(outputImage, completeProcessing, null);
+        }
+
+        private void completeProcessing(IAsyncResult result)
+        {
             //Get the end time
             DateTime processingFinish = DateTime.Now;
 
             //Write output information
-            outputInfo.Clear();
+            outputBox.InvokeEx(o => o.Clear());
             string info = String.Empty;
             info += "Compute Time: " + (processingFinish - processingStart).Duration().ToString() + Environment.NewLine;
+            info += "Bucket Count: " + (HashMatrix.KeyCount / HashMatrix.AdjustmentValue).ToString() + Environment.NewLine;
             info += "Key Count: " + HashMatrix.KeyCount + Environment.NewLine;
             info += "Heaviest Bucket: " + HashMatrix.HighVal + " keys." + Environment.NewLine;
-            outputInfo.Text = info;
+            outputBox.InvokeEx(o => o.Text = info);
 
             //unlock the main form
-            this.Enabled = true;
-            this.Invalidate();
-            this.Refresh();
-
+            main.InvokeEx(mf => { mf.Enabled = true; mf.Invalidate(); mf.Refresh(); });
         }
 
         private void MainForm_MouseWheel(Object sender, MouseEventArgs e)

@@ -78,7 +78,7 @@
             // 
             this.btnProcess.Location = new System.Drawing.Point(640, 589);
             this.btnProcess.Name = "btnProcess";
-            this.btnProcess.Size = new System.Drawing.Size(237, 23);
+            this.btnProcess.Size = new System.Drawing.Size(249, 23);
             this.btnProcess.TabIndex = 1;
             this.btnProcess.Text = "Process Image";
             this.btnProcess.UseVisualStyleBackColor = true;
@@ -88,7 +88,7 @@
             // 
             this.btnSave.Location = new System.Drawing.Point(640, 564);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(237, 23);
+            this.btnSave.Size = new System.Drawing.Size(249, 23);
             this.btnSave.TabIndex = 2;
             this.btnSave.Text = "Save Image";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -109,7 +109,7 @@
             this.comboBoxAlgos.FormattingEnabled = true;
             this.comboBoxAlgos.Location = new System.Drawing.Point(638, 25);
             this.comboBoxAlgos.Name = "comboBoxAlgos";
-            this.comboBoxAlgos.Size = new System.Drawing.Size(237, 21);
+            this.comboBoxAlgos.Size = new System.Drawing.Size(249, 21);
             this.comboBoxAlgos.TabIndex = 5;
             // 
             // label2
@@ -125,7 +125,7 @@
             // 
             this.txtBoxLoadMultiplier.Location = new System.Drawing.Point(638, 78);
             this.txtBoxLoadMultiplier.Name = "txtBoxLoadMultiplier";
-            this.txtBoxLoadMultiplier.Size = new System.Drawing.Size(234, 20);
+            this.txtBoxLoadMultiplier.Size = new System.Drawing.Size(246, 20);
             this.txtBoxLoadMultiplier.TabIndex = 7;
             this.txtBoxLoadMultiplier.Text = "1";
             // 
@@ -135,7 +135,7 @@
             this.grpBoxColorPallete.Controls.Add(this.radBtnColorBW);
             this.grpBoxColorPallete.Location = new System.Drawing.Point(638, 156);
             this.grpBoxColorPallete.Name = "grpBoxColorPallete";
-            this.grpBoxColorPallete.Size = new System.Drawing.Size(234, 39);
+            this.grpBoxColorPallete.Size = new System.Drawing.Size(246, 39);
             this.grpBoxColorPallete.TabIndex = 8;
             this.grpBoxColorPallete.TabStop = false;
             this.grpBoxColorPallete.Text = "Color Palette";
@@ -168,7 +168,7 @@
             this.grpBoxThreads.Controls.Add(this.radBtnThreadingSingle);
             this.grpBoxThreads.Location = new System.Drawing.Point(638, 201);
             this.grpBoxThreads.Name = "grpBoxThreads";
-            this.grpBoxThreads.Size = new System.Drawing.Size(234, 48);
+            this.grpBoxThreads.Size = new System.Drawing.Size(246, 48);
             this.grpBoxThreads.TabIndex = 9;
             this.grpBoxThreads.TabStop = false;
             this.grpBoxThreads.Text = "Process Threading";
@@ -210,7 +210,7 @@
             // 
             this.txtBoxKeyLength.Location = new System.Drawing.Point(643, 469);
             this.txtBoxKeyLength.Name = "txtBoxKeyLength";
-            this.txtBoxKeyLength.Size = new System.Drawing.Size(234, 20);
+            this.txtBoxKeyLength.Size = new System.Drawing.Size(246, 20);
             this.txtBoxKeyLength.TabIndex = 11;
             this.txtBoxKeyLength.Text = "8";
             // 
@@ -220,7 +220,7 @@
             this.grpBoxImageType.Controls.Add(this.radBtnGradient);
             this.grpBoxImageType.Location = new System.Drawing.Point(638, 255);
             this.grpBoxImageType.Name = "grpBoxImageType";
-            this.grpBoxImageType.Size = new System.Drawing.Size(234, 48);
+            this.grpBoxImageType.Size = new System.Drawing.Size(246, 48);
             this.grpBoxImageType.TabIndex = 12;
             this.grpBoxImageType.TabStop = false;
             this.grpBoxImageType.Text = "Image Type";
@@ -260,7 +260,7 @@
             // 
             this.txtBoxAVal.Location = new System.Drawing.Point(638, 130);
             this.txtBoxAVal.Name = "txtBoxAVal";
-            this.txtBoxAVal.Size = new System.Drawing.Size(234, 20);
+            this.txtBoxAVal.Size = new System.Drawing.Size(246, 20);
             this.txtBoxAVal.TabIndex = 14;
             this.txtBoxAVal.Text = "12";
             // 
@@ -268,7 +268,7 @@
             // 
             this.outputInfo.Location = new System.Drawing.Point(643, 508);
             this.outputInfo.Name = "outputInfo";
-            this.outputInfo.Size = new System.Drawing.Size(226, 50);
+            this.outputInfo.Size = new System.Drawing.Size(238, 50);
             this.outputInfo.TabIndex = 15;
             this.outputInfo.Text = "";
             // 
@@ -290,7 +290,7 @@
             this.grpBoxData.Controls.Add(this.radBtnKDTRandAlphaNumeric);
             this.grpBoxData.Location = new System.Drawing.Point(638, 310);
             this.grpBoxData.Name = "grpBoxData";
-            this.grpBoxData.Size = new System.Drawing.Size(234, 140);
+            this.grpBoxData.Size = new System.Drawing.Size(246, 140);
             this.grpBoxData.TabIndex = 17;
             this.grpBoxData.TabStop = false;
             this.grpBoxData.Text = "Key Type";
@@ -300,10 +300,10 @@
             this.radBtnKDTIncAlphaNumericSpec.AutoSize = true;
             this.radBtnKDTIncAlphaNumericSpec.Location = new System.Drawing.Point(16, 114);
             this.radBtnKDTIncAlphaNumericSpec.Name = "radBtnKDTIncAlphaNumericSpec";
-            this.radBtnKDTIncAlphaNumericSpec.Size = new System.Drawing.Size(208, 17);
+            this.radBtnKDTIncAlphaNumericSpec.Size = new System.Drawing.Size(226, 17);
             this.radBtnKDTIncAlphaNumericSpec.TabIndex = 4;
             this.radBtnKDTIncAlphaNumericSpec.TabStop = true;
-            this.radBtnKDTIncAlphaNumericSpec.Text = "Incremental AlphaNumeric and Special";
+            this.radBtnKDTIncAlphaNumericSpec.Text = "Incremental AlphaNumeric + Special Chars";
             this.radBtnKDTIncAlphaNumericSpec.UseVisualStyleBackColor = true;
             // 
             // radBtnKDTRandAlphaNumericSpec
@@ -311,10 +311,10 @@
             this.radBtnKDTRandAlphaNumericSpec.AutoSize = true;
             this.radBtnKDTRandAlphaNumericSpec.Location = new System.Drawing.Point(16, 43);
             this.radBtnKDTRandAlphaNumericSpec.Name = "radBtnKDTRandAlphaNumericSpec";
-            this.radBtnKDTRandAlphaNumericSpec.Size = new System.Drawing.Size(193, 17);
+            this.radBtnKDTRandAlphaNumericSpec.Size = new System.Drawing.Size(211, 17);
             this.radBtnKDTRandAlphaNumericSpec.TabIndex = 3;
             this.radBtnKDTRandAlphaNumericSpec.TabStop = true;
-            this.radBtnKDTRandAlphaNumericSpec.Text = "Random AlphaNumeric and Special";
+            this.radBtnKDTRandAlphaNumericSpec.Text = "Random AlphaNumeric + Special Chars";
             this.radBtnKDTRandAlphaNumericSpec.UseVisualStyleBackColor = true;
             // 
             // radBtnKDTIncAlphaNumeric
