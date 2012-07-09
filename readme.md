@@ -1,7 +1,7 @@
 What is Buckets?
 =======
 
-Buckets in a small tool written to help visualize the characteristics of certain hashing algorithms.
+Buckets is a small tool written to help visualize the characteristics of certain hashing algorithms.
 
 Requirements
 ============
