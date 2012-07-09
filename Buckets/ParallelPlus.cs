@@ -18,6 +18,7 @@ namespace System
             {
                 long low = from + (i * stride);
                 long high = low + stride - 1;
+                if (to - low < high - low) high = to - low - 1;
                 tasks[i] = (new Action(() => {for (long j = low; j <= high; j++) body(j); })).BeginInvoke(null, null);
             }
             for (long i = 0; i < blocks; i++) tasks[i].AsyncWaitHandle.WaitOne();
