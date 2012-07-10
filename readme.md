@@ -2,6 +2,7 @@ What is Buckets?
 =======
 
 Buckets is a small tool written to help visualize the characteristics of certain hashing algorithms.
+For more information, see the original post at http://disruptiontheory.com/visualizing-string-hashes/
 
 Requirements
 ============
